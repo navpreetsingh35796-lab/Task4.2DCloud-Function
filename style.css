@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #eef2f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.control-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+h2 {
+  color: #2c3e50;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+p {
+  color: #7f8c8d;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn {
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-living {
+  background-color: #3498db;
+}
+.btn-living:hover {
+  background-color: #2980b9;
+}
+
+.btn-bath {
+  background-color: #2ecc71;
+}
+.btn-bath:hover {
+  background-color: #27ae60;
+}
+
+.btn-closet {
+  background-color: #9b59b6;
+}
+.btn-closet:hover {
+  background-color: #8e44ad;
+}
+
+.status {
+  margin-top: 20px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #495057;
+}
