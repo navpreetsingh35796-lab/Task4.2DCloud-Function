@@ -3,144 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linda's Care Facility - Remote Control</title>
+  <title>Linda's Smart Home - Light Controller</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f6f9;
-      padding: 30px;
-      margin: 0;
-    }
-    h2 {
-      color: #222;
-      margin-bottom: 5px;
-    }
-    p.subtitle {
-      color: #666;
-      margin-top: 0;
-      margin-bottom: 30px;
-    }
-    .container {
+      background-color: #eef2f5;
       display: flex;
       justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    .card {
+    .panel {
       background: #ffffff;
-      padding: 25px;
-      width: 200px;
+      padding: 25px 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 320px;
     }
-    h3 {
+    h2 {
       margin-top: 0;
-      color: #333;
+      color: #333333;
+      font-size: 20px;
+      text-align: center;
     }
-    button {
-      padding: 12px 18px;
+    p {
+      color: #666666;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      font-weight: bold;
       border: none;
       border-radius: 6px;
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      font-size: 15px;
       cursor: pointer;
-      width: 100%;
-      transition: background-color 0.2s;
+      color: white;
+      transition: opacity 0.2s;
     }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .status {
-      margin: 15px 0;
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .on {
-      color: #28a745;
-    }
-    .off {
-      color: #dc3545;
-    }
-    #msg {
-      margin-top: 25px;
-      font-weight: 500;
-      font-size: 14px;
+    .btn:hover { opacity: 0.9; }
+    .btn-living { background-color: #2b78e4; }
+    .btn-bath   { background-color: #16a085; }
+    .btn-closet { background-color: #8e44ad; }
+    #status {
+      margin-top: 12px;
+      font-size: 13px;
+      text-align: center;
+      color: #555;
     }
   </style>
 </head>
 <body>
 
-  <h2>Linda's Care Facility</h2>
-  <p class="subtitle">Remote Lighting Control Interface</p>
+  <div class="panel">
+    <h2>Carer Light Control</h2>
+    <p>Toggle lights remotely for Linda's rooms</p>
 
-  <div class="container">
-    <!-- Living Room -->
-    <div class="card">
-      <h3>Living Room</h3>
-      <div id="s_liv" class="status off">Status: OFF</div>
-      <button onclick="toggleRoom('living room')">Toggle Light</button>
-    </div>
+    <button class="btn btn-living" onclick="sendToggle('living room')">Toggle Living Room</button>
+    <button class="btn btn-bath" onclick="sendToggle('bathroom')">Toggle Bathroom</button>
+    <button class="btn btn-closet" onclick="sendToggle('closet')">Toggle Closet</button>
 
-    <!-- Bathroom -->
-    <div class="card">
-      <h3>Bathroom</h3>
-      <div id="s_bat" class="status off">Status: OFF</div>
-      <button onclick="toggleRoom('bathroom')">Toggle Light</button>
-    </div>
-
-    <!-- Closet -->
-    <div class="card">
-      <h3>Closet</h3>
-      <div id="s_clo" class="status off">Status: OFF</div>
-      <button onclick="toggleRoom('closet')">Toggle Light</button>
-    </div>
+    <div id="status">Ready</div>
   </div>
 
-  <div id="msg"></div>
-
   <script>
-    // Configured with your exact Arduino IP
+    // Replace with your Arduino IP address
     const ARDUINO_IP = "http://10.245.119.148";
 
-    function toggleRoom(roomName) {
-      const msgBox = document.getElementById("msg");
-      msgBox.style.color = "#555";
-      msgBox.innerText = `Sending command for ${roomName}...`;
+    function sendToggle(roomName) {
+      const statusDiv = document.getElementById("status");
+      statusDiv.textContent = `Sending: ${roomName}...`;
 
-      const endpoint = `${ARDUINO_IP}/api/toggle?room=${encodeURIComponent(roomName)}`;
+      const targetUrl = `${ARDUINO_IP}/toggle?room=${encodeURIComponent(roomName)}`;
 
-      fetch(endpoint, {
-        method: "GET",
-        mode: "cors"
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Communication error");
-        return response.json();
-      })
-      .then(data => {
-        msgBox.style.color = "#28a745";
-        msgBox.innerText = `Command acknowledged! Updated ${roomName}`;
-
-        // Update Living Room UI
-        document.getElementById("s_liv").innerText = data.living ? "Status: ON" : "Status: OFF";
-        document.getElementById("s_liv").className = `status ${data.living ? "on" : "off"}`;
-
-        // Update Bathroom UI
-        document.getElementById("s_bat").innerText = data.bathroom ? "Status: ON" : "Status: OFF";
-        document.getElementById("s_bat").className = `status ${data.bathroom ? "on" : "off"}`;
-
-        // Update Closet UI
-        document.getElementById("s_clo").innerText = data.closet ? "Status: ON" : "Status: OFF";
-        document.getElementById("s_clo").className = `status ${data.closet ? "on" : "off"}`;
-      })
-      .catch(error => {
-        console.error(error);
-        msgBox.style.color = "#dc3545";
-        msgBox.innerText = "Network Error: Unable to reach Arduino at 10.245.119.148. Ensure you are on the same Wi-Fi network.";
-      });
+      fetch(targetUrl, { mode: "no-cors" })
+        .then(() => {
+          statusDiv.textContent = `Status: Toggled ${roomName}`;
+        })
+        .catch(err => {
+          statusDiv.textContent = `Request failed: ${err.message}`;
+        });
     }
   </script>
 
