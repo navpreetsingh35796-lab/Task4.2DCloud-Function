@@ -4,91 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Linda's Smart Home - Light Controller</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #eef2f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .panel {
-      background: #ffffff;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 320px;
-    }
-    h2 {
-      margin-top: 0;
-      color: #333333;
-      font-size: 20px;
-      text-align: center;
-    }
-    p {
-      color: #666666;
-      font-size: 14px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .btn {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-      transition: opacity 0.2s;
-    }
-    .btn:hover { opacity: 0.9; }
-    .btn-living { background-color: #2b78e4; }
-    .btn-bath   { background-color: #16a085; }
-    .btn-closet { background-color: #8e44ad; }
-    #status {
-      margin-top: 12px;
-      font-size: 13px;
-      text-align: center;
-      color: #555;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="panel">
+  <div class="control-card">
     <h2>Carer Light Control</h2>
-    <p>Toggle lights remotely for Linda's rooms</p>
+    <p>Select a room to toggle the LED remotely:</p>
 
-    <button class="btn btn-living" onclick="sendToggle('living room')">Toggle Living Room</button>
-    <button class="btn btn-bath" onclick="sendToggle('bathroom')">Toggle Bathroom</button>
-    <button class="btn btn-closet" onclick="sendToggle('closet')">Toggle Closet</button>
+    <div class="button-group">
+      <button id="btn-living" class="btn btn-living">Toggle Living Room</button>
+      <button id="btn-bath" class="btn btn-bath">Toggle Bathroom</button>
+      <button id="btn-closet" class="btn btn-closet">Toggle Closet</button>
+    </div>
 
-    <div id="status">Ready</div>
+    <div id="status-box" class="status">System Ready</div>
   </div>
 
-  <script>
-    // Replace with your Arduino IP address
-    const ARDUINO_IP = "http://10.245.119.148";
-
-    function sendToggle(roomName) {
-      const statusDiv = document.getElementById("status");
-      statusDiv.textContent = `Sending: ${roomName}...`;
-
-      const targetUrl = `${ARDUINO_IP}/toggle?room=${encodeURIComponent(roomName)}`;
-
-      fetch(targetUrl, { mode: "no-cors" })
-        .then(() => {
-          statusDiv.textContent = `Status: Toggled ${roomName}`;
-        })
-        .catch(err => {
-          statusDiv.textContent = `Request failed: ${err.message}`;
-        });
-    }
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
